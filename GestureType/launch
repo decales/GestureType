@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./gradlew && /home/declan/Android/Sdk/platform-tools/adb shell am start -n com.example.project/com.example.project.MainActivity
