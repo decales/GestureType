@@ -1,7 +1,5 @@
 package com.example.project.viewmodel
 
-import android.graphics.Bitmap
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -18,10 +16,9 @@ import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.project.model.OcrClient
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class DrawingViewModel(
+class DrawingVM(
     private val ocrClient: OcrClient
 ): ViewModel() {
 
@@ -39,10 +36,9 @@ class DrawingViewModel(
         strokes.add(Stroke(change.position - dragAmount, change.position))
     }
 
-
     fun drawStrokes() {
         val style: Paint = Paint()
-        style.color = Color(0xFFFFFFFF)
+        style.color = Color(0xFFffffff)
         style.strokeWidth = 25F
         style.strokeCap = StrokeCap.Round
         strokes.forEach {
