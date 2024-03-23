@@ -44,7 +44,7 @@ class GestureView(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             GestureSurface()
-            Text(text = "Output: ${viewModel.detectedGesture}")
+            Text(text = "Command: ${viewModel.stateMachine.command}")
         }
     }
 
@@ -57,15 +57,24 @@ class GestureView(
                 .fillMaxHeight(0.9F)
                 .padding(top = 10.dp, bottom = 10.dp)
                 .pointerInput(Unit) {
-                    detectDragGestures { change, dragAmount -> viewModel.oneFingerSwipe(change, dragAmount) }
+
+                    detectDragGestures(
+                        onDrag = {change, dragAmount ->
+                            viewModel.change = change
+                            viewModel.dragAmount = dragAmount
+                        },
+                        onDragEnd = { viewModel.swipe() }
+
+                    )
+                    //detectDragGestures { change, dragAmount -> viewModel.swipe(change, dragAmount) }
                 }
                 .pointerInput(Unit) {
                     detectTapGestures(onDoubleTap = { viewModel.doubleTap() })
                 }
-                .pointerInteropFilter { event ->
-                    viewModel.pointerCount = event.pointerCount
-                    true
-                }
+//                .pointerInteropFilter { event ->
+//                    viewModel.pointerCount = event.pointerCount
+//                    true
+//                }
         ) {}
     }
 }

@@ -1,6 +1,5 @@
 package com.example.project.model
 
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.os.Build
@@ -25,9 +24,7 @@ class BluetoothClient(
     var connectedDevice: BluetoothDevice? by mutableStateOf(null)
 
 
-    fun send(modifier: Int, input: String) {
-        for (i in 0.rangeTo(modifier)) {
-            // send input to bluetooth module
-        }
+    fun send(keys: List<Int>) {
+
     }
 }

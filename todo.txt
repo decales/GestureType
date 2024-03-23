@@ -1,0 +1,7 @@
+-Implement custom tensorflow model to fix character recognition
+-Add two finger swipe recognition
+-Add way to input space in insert mode
+-Replace manual character recognition button for automatic mechanism
+-Add bluetooth capabilities
+
+

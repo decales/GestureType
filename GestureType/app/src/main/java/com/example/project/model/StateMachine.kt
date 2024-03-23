@@ -20,26 +20,34 @@ class StateMachine(
     private var mode: StateMachineMode by mutableStateOf(StateMachineMode.INSERT)
     private var action: StateMachineAction by mutableStateOf(StateMachineAction.DEFAULT)
     private var modifier: Int by mutableIntStateOf(1);
+    var command: String by mutableStateOf("")
 
-    fun getCommand(input: String) {
+    fun execute(modifier: Int, keys: List<Int>, description: String) {
+        val modifiedKeys = mutableListOf<Int>()
+        repeat(modifier) {modifiedKeys.addAll(keys)}
+        bluetoothClient.send(modifiedKeys)
+        command = description
+    }
+
+    fun input(input: String) {
         when (mode) {
             StateMachineMode.INSERT -> {
                 when(input) {
                     "DoubleTap" -> mode = StateMachineMode.COMMAND
-                    "TwoSwipeLeft" -> bluetoothClient.send(modifier, "")
-                    else -> bluetoothClient.send(1, "")
+                    "TwoSwipeLeft" -> execute(modifier, listOf(), "Delete character")
+                    else -> execute(1, listOf(), "Insert $input")
                 }
             }
             StateMachineMode.COMMAND -> {
-                if ((input.isDigitsOnly())) modifier = input.codePointAt(0)
+                if ((input.isDigitsOnly())) modifier = input.toInt()
                 else {
                     if (action == StateMachineAction.SELECT) {
                         when(input) {
                             "DoubleTap" -> mode = StateMachineMode.INSERT
-                            "OneSwipeLeft" -> bluetoothClient.send(modifier, "")
-                            "OneSwipeRight" -> bluetoothClient.send(modifier, "")
-                            "TwoSwipeLeft" -> bluetoothClient.send(modifier, "")
-                            "TwoSwipeRight" -> bluetoothClient.send(modifier, "")
+                            "OneSwipeLeft" -> execute(modifier, listOf(), "Select $modifier. character(s) to left")
+                            "OneSwipeRight" -> execute(modifier, listOf(), "Select $modifier character(s) to right")
+                            "TwoSwipeLeft" -> execute(modifier, listOf(), "Select $modifier word(s) to left")
+                            "TwoSwipeRight" -> execute(modifier, listOf(), "Select $modifier word(s) to right")
                         }
                         action = StateMachineAction.DEFAULT
                     }
@@ -47,15 +55,16 @@ class StateMachine(
                         when(input) {
                             "DoubleTap" -> mode = StateMachineMode.INSERT
                             "S" -> action = StateMachineAction.SELECT
-                            "C" -> bluetoothClient.send(1, "")
-                            "X" -> bluetoothClient.send(1, "")
-                            "V" -> bluetoothClient.send(modifier, "")
-                            "OneSwipeLeft" -> bluetoothClient.send(modifier, "")
-                            "OneSwipeRight" -> bluetoothClient.send(modifier, "")
-                            "TwoSwipeLeft" -> bluetoothClient.send(modifier, "")
-                            "TwoSwipeRight" -> bluetoothClient.send(modifier, "")
+                            "C" -> execute(1, listOf(), "Copy selection")
+                            "X" -> execute(1, listOf(), "Cut/delete selection")
+                            "V" -> execute(1, listOf(), "Paste selection")
+                            "OneSwipeLeft" -> execute(modifier, listOf(), "Move cursor $modifier character(s) to left")
+                            "OneSwipeRight" -> execute(modifier, listOf(), "Move cursor $modifier character(s) to right")
+                            "TwoSwipeLeft" -> execute(modifier, listOf(), "Move cursor $modifier word(s) to left")
+                            "TwoSwipeRight" -> execute(modifier, listOf(), "Move cursor $modifier word(s) to right")
                         }
                     }
+                    modifier = 1
                 }
             }
         }

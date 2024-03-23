@@ -60,6 +60,7 @@ class DrawingVM(
     fun detectCharacter() {
         viewModelScope.launch {
             detectedChar = ocrClient.detectFromBitmap(canvasBitmap.asAndroidBitmap())
+            if (detectedChar.isNotBlank()) stateMachine.input(detectedChar)
             strokes.clear()
         }
     }
