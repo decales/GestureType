@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.dagger.hilt.android") version "2.44" apply false
+
 }
 
 android {
@@ -48,6 +50,7 @@ android {
 
 dependencies {
 
+    implementation("com.google.dagger:hilt-android:2.44")
     implementation("com.google.mlkit:text-recognition:16.0.0")
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")

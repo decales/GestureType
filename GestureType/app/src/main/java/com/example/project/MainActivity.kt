@@ -10,7 +10,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.project.model.BluetoothClient
 import com.example.project.model.OcrClient
+import com.example.project.model.StateMachine
 import com.example.project.ui.theme.ProjectTheme
 import com.example.project.view.DrawingView
 import com.example.project.view.GestureView
@@ -26,10 +28,13 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 
                     val ocrClient: OcrClient = OcrClient()
-                    val drawingVM: DrawingVM  = DrawingVM(ocrClient)
+                    val bluetoothClient: BluetoothClient = BluetoothClient(this)
+                    val stateMachine: StateMachine = StateMachine(bluetoothClient)
+
+                    val drawingVM: DrawingVM  = DrawingVM(ocrClient, stateMachine)
                     val drawingView: DrawingView = DrawingView(drawingVM)
 
-                    val gestureVM: GestureVM =  GestureVM()
+                    val gestureVM: GestureVM =  GestureVM(stateMachine)
                     val gestureView: GestureView = GestureView(gestureVM)
 
                     Column(

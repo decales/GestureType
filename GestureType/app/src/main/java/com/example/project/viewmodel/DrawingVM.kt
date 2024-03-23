@@ -16,10 +16,12 @@ import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.project.model.OcrClient
+import com.example.project.model.StateMachine
 import kotlinx.coroutines.launch
 
 class DrawingVM(
-    private val ocrClient: OcrClient
+    private val ocrClient: OcrClient,
+    private val stateMachine: StateMachine
 ): ViewModel() {
 
     data class Stroke(
