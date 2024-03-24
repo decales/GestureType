@@ -17,7 +17,7 @@ enum class StateMachineAction {
 class StateMachine(
     private val bluetoothClient: BluetoothClient,
 ) {
-    private var mode: StateMachineMode by mutableStateOf(StateMachineMode.INSERT)
+    var mode: StateMachineMode by mutableStateOf(StateMachineMode.INSERT)
     private var action: StateMachineAction by mutableStateOf(StateMachineAction.DEFAULT)
     private var modifier: Int by mutableIntStateOf(1);
     var command: String by mutableStateOf("")
@@ -64,7 +64,7 @@ class StateMachine(
                             "TwoSwipeRight" -> execute(modifier, listOf(), "Move cursor $modifier word(s) to right")
                         }
                     }
-                    modifier = 1
+                    if (action != StateMachineAction.SELECT) modifier = 1
                 }
             }
         }
