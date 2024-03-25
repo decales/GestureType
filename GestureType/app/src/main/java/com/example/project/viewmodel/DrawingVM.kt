@@ -35,6 +35,7 @@ class DrawingVM(
     var detectedChar: String by mutableStateOf("")
 
     fun addStroke(change: PointerInputChange, dragAmount: Offset) {
+        detectedChar = ""
         strokes.add(Stroke(change.position - dragAmount, change.position))
     }
 

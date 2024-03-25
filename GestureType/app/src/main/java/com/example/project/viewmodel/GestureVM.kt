@@ -22,6 +22,7 @@ class GestureVM(
     fun doubleTap() {
         detectedGesture = "DoubleTap"
         stateMachine.input(detectedGesture)
+        pointerCount = 1
     }
 
     fun swipe() {
@@ -29,9 +30,10 @@ class GestureVM(
             detectedGesture = if ((change?.position?.x ?: 0F) + dragAmount.x > (change?.position?.x ?: 0F)) "OneSwipeRight"
             else "OneSwipeLeft"
         }
-        else { // Two-finger swipe
+        else if (pointerCount == 2){ // Two-finger swipe
             detectedGesture = if ((change?.position?.x ?: 0F) + dragAmount.x > (change?.position?.x ?: 0F)) "TwoSwipeRight"
             else "TwoSwipeLeft"
+            pointerCount = 1
         }
         stateMachine.input(detectedGesture)
     }

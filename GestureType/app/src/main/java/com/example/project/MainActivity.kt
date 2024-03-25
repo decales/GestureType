@@ -73,20 +73,21 @@ fun MainView(drawingView: DrawingView,gestureView: GestureView, stateMachine: St
         Box(modifier = Modifier.border(BorderStroke(2.dp, modeColor), RoundedCornerShape(3))
         ) {
             Column(
-                modifier = Modifier.padding(10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp)
+                ) {
                 Text(text = "${stateMachine.mode} MODE", color = modeColor)
-
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(30.dp)
+
+                        .padding(20.dp)
                 ) {
                     drawingView.View()
                     gestureView.View()
-                    Text(text = "Command: ${stateMachine.command}")
                 }
+                Text(text = "${stateMachine.command}")
             }
         }
 

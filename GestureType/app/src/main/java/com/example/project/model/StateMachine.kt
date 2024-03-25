@@ -35,7 +35,7 @@ class StateMachine(
                 when(input) {
                     "DoubleTap" -> mode = StateMachineMode.COMMAND
                     "TwoSwipeLeft" -> execute(modifier, listOf(), "Delete character")
-                    else -> execute(1, listOf(), "Insert $input")
+                    else -> if (input.length == 1) execute(1, listOf(), "Insert '$input'")
                 }
             }
             StateMachineMode.COMMAND -> {
@@ -44,7 +44,7 @@ class StateMachine(
                     if (action == StateMachineAction.SELECT) {
                         when(input) {
                             "DoubleTap" -> mode = StateMachineMode.INSERT
-                            "OneSwipeLeft" -> execute(modifier, listOf(), "Select $modifier. character(s) to left")
+                            "OneSwipeLeft" -> execute(modifier, listOf(), "Select $modifier character(s) to left")
                             "OneSwipeRight" -> execute(modifier, listOf(), "Select $modifier character(s) to right")
                             "TwoSwipeLeft" -> execute(modifier, listOf(), "Select $modifier word(s) to left")
                             "TwoSwipeRight" -> execute(modifier, listOf(), "Select $modifier word(s) to right")
