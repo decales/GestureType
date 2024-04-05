@@ -8,30 +8,30 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.text.toLowerCase
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.project.model.BluetoothClient
 import com.example.project.model.OcrClient
 import com.example.project.model.StateMachine
 import com.example.project.model.StateMachineMode
 import com.example.project.ui.theme.ProjectTheme
+import com.example.project.view.BTmenuView
 import com.example.project.view.DrawingView
 import com.example.project.view.GestureView
+import com.example.project.viewmodel.BTmenuVM
 import com.example.project.viewmodel.DrawingVM
 import com.example.project.viewmodel.GestureVM
 
@@ -50,12 +50,16 @@ class MainActivity : ComponentActivity() {
                     val drawingVM: DrawingVM  = DrawingVM(ocrClient, stateMachine)
                     val drawingView: DrawingView = DrawingView(drawingVM)
 
+                    val BTmenuVM: BTmenuVM = BTmenuVM()
+                    val BTmenuView: BTmenuView = BTmenuView(BTmenuVM)
+
                     val gestureVM: GestureVM =  GestureVM(stateMachine)
                     val gestureView: GestureView = GestureView(gestureVM)
 
                     MainView(
                         drawingView = drawingView,
                         gestureView = gestureView,
+                        BTMenuView = BTmenuView,
                         stateMachine = stateMachine
                     )
                 }
@@ -65,7 +69,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainView(drawingView: DrawingView,gestureView: GestureView, stateMachine: StateMachine) {
+fun MainView(drawingView: DrawingView,gestureView: GestureView, BTMenuView: BTmenuView, stateMachine: StateMachine) {
     val modeColor = if (stateMachine.mode == StateMachineMode.INSERT) Color.Magenta else Color.Cyan
 
     Box(modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 5.dp, end = 5.dp)
@@ -78,16 +82,29 @@ fun MainView(drawingView: DrawingView,gestureView: GestureView, stateMachine: St
                     .fillMaxSize()
                     .padding(10.dp)
                 ) {
-                Text(text = "${stateMachine.mode} MODE", color = modeColor)
+
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Box {
+                        Text(text = "${stateMachine.mode} MODE", color = modeColor,)
+                    }
+                    Box(
+                        contentAlignment = Alignment.CenterEnd,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        BTMenuView.View()
+                    }
+                }
                 Column(
                     modifier = Modifier
-
                         .padding(20.dp)
                 ) {
                     drawingView.View()
                     gestureView.View()
                 }
-                Text(text = "${stateMachine.command}")
+                Text(text = stateMachine.command)
             }
         }
 
