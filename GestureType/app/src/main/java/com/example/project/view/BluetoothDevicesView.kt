@@ -4,7 +4,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,15 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import com.example.project.R
-import com.example.project.viewmodel.BTmenuVM
+import com.example.project.viewmodel.BluetoothDevicesVM
 
-class BTmenuView(
-    private val viewModel: BTmenuVM
+class BluetoothDevicesView(
+    private val viewModel: BluetoothDevicesVM
 ) {
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -89,15 +86,15 @@ class BTmenuView(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Text(text = "Available devices")
+                Text(text = "Visible devices")
 
 
                 LazyColumn(
                     modifier = Modifier.border(1.dp, Color.Gray)
                 ) {
-                    viewModel.availableDevices.forEach { device ->
+                    viewModel.visibleDevices.forEach { device ->
                         item {
-                            Text(text = device)
+                            Text(text = device.name)
                         }
                     }
                 }
@@ -110,8 +107,8 @@ class BTmenuView(
         Box {
             Column {
                 Text(text = "Current device")
-                if (viewModel.connectedDevice == null) Text(text = "No device connected", color = Color.Red)
-                else Text(text = viewModel.connectedDevice!!, color = Color.Green)
+                if (viewModel.currentDevice == null) Text(text = "No device connected", color = Color.Red)
+                else Text(text = viewModel.currentDevice!!.name, color = Color.Green)
             }
         }
     }

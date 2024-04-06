@@ -10,10 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,17 +18,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.project.model.BluetoothClient
 import com.example.project.model.OcrClient
 import com.example.project.model.StateMachine
 import com.example.project.model.StateMachineMode
 import com.example.project.ui.theme.ProjectTheme
-import com.example.project.view.BTmenuView
+import com.example.project.view.BluetoothDevicesView
 import com.example.project.view.DrawingView
 import com.example.project.view.GestureView
-import com.example.project.viewmodel.BTmenuVM
+import com.example.project.viewmodel.BluetoothDevicesVM
 import com.example.project.viewmodel.DrawingVM
 import com.example.project.viewmodel.GestureVM
 
@@ -50,8 +46,8 @@ class MainActivity : ComponentActivity() {
                     val drawingVM: DrawingVM  = DrawingVM(ocrClient, stateMachine)
                     val drawingView: DrawingView = DrawingView(drawingVM)
 
-                    val BTmenuVM: BTmenuVM = BTmenuVM()
-                    val BTmenuView: BTmenuView = BTmenuView(BTmenuVM)
+                    val bluetoothDevicesVM: BluetoothDevicesVM = BluetoothDevicesVM(bluetoothClient)
+                    val bluetoothDevicesView: BluetoothDevicesView = BluetoothDevicesView(bluetoothDevicesVM)
 
                     val gestureVM: GestureVM =  GestureVM(stateMachine)
                     val gestureView: GestureView = GestureView(gestureVM)
@@ -59,7 +55,7 @@ class MainActivity : ComponentActivity() {
                     MainView(
                         drawingView = drawingView,
                         gestureView = gestureView,
-                        BTMenuView = BTmenuView,
+                        bluetoothDevicesView = bluetoothDevicesView,
                         stateMachine = stateMachine
                     )
                 }
@@ -69,7 +65,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainView(drawingView: DrawingView,gestureView: GestureView, BTMenuView: BTmenuView, stateMachine: StateMachine) {
+fun MainView(drawingView: DrawingView, gestureView: GestureView, bluetoothDevicesView: BluetoothDevicesView, stateMachine: StateMachine) {
     val modeColor = if (stateMachine.mode == StateMachineMode.INSERT) Color.Magenta else Color.Cyan
 
     Box(modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 5.dp, end = 5.dp)
@@ -94,7 +90,7 @@ fun MainView(drawingView: DrawingView,gestureView: GestureView, BTMenuView: BTme
                         contentAlignment = Alignment.CenterEnd,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        BTMenuView.View()
+                        bluetoothDevicesView.View()
                     }
                 }
                 Column(
@@ -107,9 +103,7 @@ fun MainView(drawingView: DrawingView,gestureView: GestureView, BTMenuView: BTme
                 Text(text = stateMachine.command)
             }
         }
-
     }
-
 }
 
 
