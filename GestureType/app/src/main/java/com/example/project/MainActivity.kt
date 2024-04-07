@@ -1,8 +1,14 @@
 package com.example.project
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -31,18 +37,52 @@ import com.example.project.viewmodel.BluetoothDevicesVM
 import com.example.project.viewmodel.DrawingVM
 import com.example.project.viewmodel.GestureVM
 
+@RequiresApi(Build.VERSION_CODES.M)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        // Bluetooth setup
+        val manager: BluetoothManager = applicationContext.getSystemService(BluetoothManager::class.java)
+        val bluetoothEnabled: Boolean = manager.adapter.isEnabled
+
+        val enableBluetoothLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {}
+
+        val bluetoothPermissionsLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            val canEnableBluetooth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                permissions[android.Manifest.permission.BLUETOOTH_CONNECT] == true
+            } else true
+
+            if (canEnableBluetooth && !bluetoothEnabled) {
+                enableBluetoothLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+            }
+        }
+
+        // Launch permission check
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            bluetoothPermissionsLauncher.launch(
+                arrayOf(
+                    android.Manifest.permission.BLUETOOTH_CONNECT,
+                    android.Manifest.permission.BLUETOOTH_SCAN
+                )
+            )
+        }
+
         super.onCreate(savedInstanceState)
         setContent {
             ProjectTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 
+                    // Model setup
                     val ocrClient: OcrClient = OcrClient()
                     val bluetoothClient: BluetoothClient = BluetoothClient(this)
                     val stateMachine: StateMachine = StateMachine(bluetoothClient)
 
+                    // View and VM setup
                     val drawingVM: DrawingVM  = DrawingVM(ocrClient, stateMachine)
                     val drawingView: DrawingView = DrawingView(drawingVM)
 
@@ -64,6 +104,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun MainView(drawingView: DrawingView, gestureView: GestureView, bluetoothDevicesView: BluetoothDevicesView, stateMachine: StateMachine) {
     val modeColor = if (stateMachine.mode == StateMachineMode.INSERT) Color.Magenta else Color.Cyan

@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 
-
 class BluetoothDeviceReceiver(
     private val onDeviceReceived: (android.bluetooth.BluetoothDevice) -> Unit
 ): BroadcastReceiver() {
@@ -15,13 +14,11 @@ class BluetoothDeviceReceiver(
             android.bluetooth.BluetoothDevice.ACTION_FOUND -> {
                 val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     intent.getParcelableExtra(
-                        android.bluetooth.BluetoothDevice.EXTRA_NAME,
+                        android.bluetooth.BluetoothDevice.EXTRA_DEVICE,
                         android.bluetooth.BluetoothDevice::class.java
                     )
-                } else {
-                    intent.getParcelableExtra(android.bluetooth.BluetoothDevice.EXTRA_NAME)
-                }
-                device?.let { onDeviceReceived }
+                } else intent.getParcelableExtra(android.bluetooth.BluetoothDevice.EXTRA_DEVICE)
+                device?.let (onDeviceReceived)
             }
         }
     }

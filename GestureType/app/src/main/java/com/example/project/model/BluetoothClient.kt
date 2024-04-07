@@ -6,18 +6,14 @@ import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import com.example.project.Manifest
-import java.security.Permission
 
 typealias BlueToothClientDevice = BluetoothDevice
 
 data class BluetoothDevice(
-    val name: String,
+    val name: String?,
     val address: String
 )
 
@@ -26,29 +22,42 @@ data class BluetoothDevice(
 class BluetoothClient(
     private val context: Context
 ) {
-    val manager: BluetoothManager = context.getSystemService(BluetoothManager::class.java)
-    val scannedDevices: MutableList<BluetoothDevice> = mutableStateListOf()
-    var connectedDevice: BluetoothDevice? by mutableStateOf(null)
-    val deviceReceiver = BluetoothDeviceReceiver { device ->
-        val newDevice: BluetoothDevice = BluetoothDevice(device.name, device.address)
-
-
+    private val manager: BluetoothManager = context.getSystemService(BluetoothManager::class.java)
+    val pairedDevices: MutableList<BluetoothDevice> = mutableStateListOf()
+    val visibleDevices: MutableList<BluetoothDevice> = mutableStateListOf()
+    private val deviceReceiver = BluetoothDeviceReceiver { device ->
+        val newDevice = BluetoothDevice(device.name, device.address)
+        if (!visibleDevices.contains(newDevice)) visibleDevices.add(newDevice)
     }
 
-    fun hasPermission(permission: String): Boolean {
-        return context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
+    private fun hasPermissions(vararg permissions: String): Boolean {
+        permissions.forEach { if (context.checkSelfPermission(it) == PackageManager.PERMISSION_DENIED) return false }
+        return true
     }
 
     fun startDeviceDiscovery() {
-        manager.adapter.startDiscovery()
-        context.registerReceiver(
-            deviceReceiver,
-            IntentFilter(android.bluetooth.BluetoothDevice.ACTION_FOUND)
-        )
+        if (hasPermissions(android.Manifest.permission.BLUETOOTH_SCAN)) {
+            context.registerReceiver(
+                deviceReceiver,
+                IntentFilter(android.bluetooth.BluetoothDevice.ACTION_FOUND)
+            )
+            updatePairedDevices()
+            manager.adapter?.startDiscovery()
+        }
     }
 
     fun stopDeviceDiscovery() {
-        manager.adapter.cancelDiscovery()
+        if (hasPermissions(android.Manifest.permission.BLUETOOTH_SCAN)) {
+            manager.adapter?.cancelDiscovery()
+        }
+    }
+
+    fun updatePairedDevices() {
+        if (hasPermissions(android.Manifest.permission.BLUETOOTH_CONNECT)) {
+            manager.adapter?.bondedDevices?.forEach { device ->
+                pairedDevices.add(BluetoothDevice(device.name, device.address))
+            }
+        }
     }
 
     fun freeReceiverData() {
