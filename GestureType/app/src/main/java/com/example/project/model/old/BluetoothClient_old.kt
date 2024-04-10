@@ -73,24 +73,6 @@ class BluetoothClient(
     private var clientSocket: BluetoothSocket? = null
 
 
-    inner class ProxyListener(): BluetoothProfile.ServiceListener {
-        override fun onServiceConnected(profile: Int, proxy: BluetoothProfile?) {
-            TODO("Not yet implemented")
-        }
-
-        override fun onServiceDisconnected(profile: Int) {
-            TODO("Not yet implemented")
-        }
-
-    }
-
-    private val listener: ProxyListener = ProxyListener()
-
-
-    @RequiresApi(Build.VERSION_CODES.P)
-    val proxy = adapter?.getProfileProxy(context, listener, BluetoothProfile.HID_DEVICE)
-
-
     init {
         context.registerReceiver(stateReceiver, IntentFilter().apply {
             addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
@@ -105,22 +87,22 @@ class BluetoothClient(
         return true
     }
 
-//    fun startDeviceDiscovery() {
-//        if (hasPermissions(android.Manifest.permission.BLUETOOTH_SCAN)) {
-//            context.registerReceiver(
-//                deviceReceiver,
-//                IntentFilter(android.bluetooth.BluetoothDevice.ACTION_FOUND)
-//            )
-//            updatePairedDevices()
-//            adapter?.startDiscovery()
-//        }
-//    }
+    fun startDeviceDiscovery() {
+        if (hasPermissions(android.Manifest.permission.BLUETOOTH_SCAN)) {
+            context.registerReceiver(
+                deviceReceiver,
+                IntentFilter(android.bluetooth.BluetoothDevice.ACTION_FOUND)
+            )
+            updatePairedDevices()
+            adapter?.startDiscovery()
+        }
+    }
 
-//    fun stopDeviceDiscovery() {
-//        if (hasPermissions(android.Manifest.permission.BLUETOOTH_SCAN)) {
-//            adapter?.cancelDiscovery()
-//        }
-//    }
+    fun stopDeviceDiscovery() {
+        if (hasPermissions(android.Manifest.permission.BLUETOOTH_SCAN)) {
+            adapter?.cancelDiscovery()
+        }
+    }
 
     fun updatePairedDevices() {
         if (hasPermissions(android.Manifest.permission.BLUETOOTH_CONNECT)) {
@@ -133,18 +115,12 @@ class BluetoothClient(
         }
     }
 
-//    fun freeReceiverData() {
-//        context.unregisterReceiver(deviceReceiver)
-//        context.unregisterReceiver(stateReceiver)
-//        closeConnection()
-//    }
+    fun freeReceiverData() {
+        context.unregisterReceiver(deviceReceiver)
+        context.unregisterReceiver(stateReceiver)
+        closeConnection()
+    }
 
-//    fun enableDiscoverable() {
-//        val discoverableIntent: Intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-//            putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
-//        }
-//        startActivity(discoverableIntent)
-//    }
 
     @RequiresApi(Build.VERSION_CODES.P)
     fun startDiscoverable() {
@@ -182,30 +158,30 @@ class BluetoothClient(
         }.flowOn(Dispatchers.IO)
     }
 
-//    fun connectToDevice(device: BluetoothDevice): Flow<ConnectionResult> {
-//        return flow {
-//            if (hasPermissions(android.Manifest.permission.BLUETOOTH_CONNECT)) {
-//
-//                val currentDevice: android.bluetooth.BluetoothDevice? = adapter?.getRemoteDevice(device.address)
-//                clientSocket = currentDevice?.createRfcommSocketToServiceRecord(uuid) // Pairing dialogue
-//                stopDeviceDiscovery()
-//
-//                // Socket connection
-//                clientSocket?.let { socket ->
-//                    try {
-//                        socket.connect()
-//                        emit(ConnectionResult.ConnectionEstablished)
-//                    } catch (e: IOException) {
-//                        socket.close()
-//                        clientSocket = null
-//                        emit(ConnectionResult.Error("Connection was interrupted"))
-//                    }
-//                }
-//            }
-//        }.onCompletion {
-//            closeConnection()
-//        }.flowOn(Dispatchers.IO)
-//    }
+    fun connectToDevice(device: BluetoothDevice): Flow<ConnectionResult> {
+        return flow {
+            if (hasPermissions(android.Manifest.permission.BLUETOOTH_CONNECT)) {
+
+                val currentDevice: android.bluetooth.BluetoothDevice? = adapter?.getRemoteDevice(device.address)
+                clientSocket = currentDevice?.createRfcommSocketToServiceRecord(uuid) // Pairing dialogue
+                stopDeviceDiscovery()
+
+                // Socket connection
+                clientSocket?.let { socket ->
+                    try {
+                        socket.connect()
+                        emit(ConnectionResult.ConnectionEstablished)
+                    } catch (e: IOException) {
+                        socket.close()
+                        clientSocket = null
+                        emit(ConnectionResult.Error("Connection was interrupted"))
+                    }
+                }
+            }
+        }.onCompletion {
+            closeConnection()
+        }.flowOn(Dispatchers.IO)
+    }
 
     fun closeConnection() {
         clientSocket?.close()

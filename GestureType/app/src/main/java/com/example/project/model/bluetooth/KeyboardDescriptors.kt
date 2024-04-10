@@ -1,6 +1,6 @@
 package com.example.project.model.bluetooth
 
-object HidDescriptors {
+object KeyboardDescriptors {
 
     val KEYBOARD_MODIFIED = byteArrayOf(
         0x05.toByte(), 0x01.toByte(),                         // Usage Page (Generic Desktop)

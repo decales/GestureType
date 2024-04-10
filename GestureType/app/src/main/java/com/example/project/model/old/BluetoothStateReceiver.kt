@@ -1,4 +1,4 @@
-package com.example.project.model.bluetooth
+package com.example.project.model.old
 
 import android.content.BroadcastReceiver
 import android.content.Context

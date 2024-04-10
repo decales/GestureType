@@ -1,4 +1,4 @@
-package com.example.project.model
+package com.example.project.model.bluetooth
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter

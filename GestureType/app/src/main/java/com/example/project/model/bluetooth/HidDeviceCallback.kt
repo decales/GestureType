@@ -1,4 +1,10 @@
-package com.example.project.model.bluetooth
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothHidDevice
+import android.os.Build
+import androidx.annotation.RequiresApi
 
-class HidDeviceCallback {
+@RequiresApi(Build.VERSION_CODES.P)
+class HidDeviceCallback(): BluetoothHidDevice.Callback() {
+
+
 }
