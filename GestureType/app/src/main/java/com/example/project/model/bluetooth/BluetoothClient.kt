@@ -78,18 +78,17 @@ class BluetoothClient(
 
     fun requestBluetoothEnable() {
         if (adapter != null) {
-            if (!adapter.isEnabled) context.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+            if (!adapter.isEnabled) {
+                context.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+            }
         }
-        else Toast.makeText(context, "Bluetooth is not supported on this device", Toast.LENGTH_LONG).show()
     }
-
 
     fun initProxy() {
         if (hasPermissions(android.Manifest.permission.BLUETOOTH_CONNECT)) {
             adapter?.getProfileProxy(context, serviceListener, BluetoothProfile.HID_DEVICE)
         }
     }
-
 
     fun updatePairedDevices() {
         if (hasPermissions(android.Manifest.permission.BLUETOOTH_CONNECT)) {
@@ -99,25 +98,19 @@ class BluetoothClient(
         }
     }
 
-
     fun startDeviceDiscovery() {
         if (hasPermissions(android.Manifest.permission.BLUETOOTH_SCAN)) {
-            context.registerReceiver(
-                deviceReceiver,
-                IntentFilter(BluetoothDevice.ACTION_FOUND)
-            )
+            context.registerReceiver(deviceReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
             updatePairedDevices()
             adapter?.startDiscovery()
         }
     }
-
 
     fun connectToDevice(device: BluetoothDevice) {
         if (hasPermissions(android.Manifest.permission.BLUETOOTH_CONNECT)) {
             hidDevice?.connect(device)
         }
     }
-
 
     fun disconnectFromDevice()  {
         if (hasPermissions(android.Manifest.permission.BLUETOOTH_CONNECT)) {
@@ -142,7 +135,7 @@ class BluetoothClient(
                     "Gesture-based input device application",
                     "CMPT 481",
                     BluetoothHidDevice.SUBCLASS1_KEYBOARD,
-                    KeyboardDescriptors.KEYBOARD_MODIFIED
+                    KeyboardDescriptors.standard
                 ),
                 null, null, {it.run()}, deviceCallback
             )
