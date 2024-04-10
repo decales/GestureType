@@ -29,10 +29,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,7 +39,7 @@ import com.example.project.R
 import com.example.project.viewmodel.BluetoothDevicesVM
 
 @SuppressLint("MissingPermission")
-@RequiresApi(Build.VERSION_CODES.Q)
+@RequiresApi(Build.VERSION_CODES.S)
 class BluetoothDevicesView(
     private val viewModel: BluetoothDevicesVM
 ) {
@@ -51,8 +47,6 @@ class BluetoothDevicesView(
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun View() {
-        var refresh: Boolean by remember { mutableStateOf(false) }
-
         IconButton(
             onClick = {
                 viewModel.menuVisible = true
@@ -85,10 +79,31 @@ class BluetoothDevicesView(
                             
                             if (viewModel.bluetoothClient.adapter != null) { // Bluetooth supported
                                 if (viewModel.bluetoothClient.adapter.isEnabled) { // Bluetooth enabled
-                                    if (viewModel.bluetoothClient.isConnecting) ConnectingToDevice()
-                                    else if (viewModel.bluetoothClient.isDisconnecting) DisconnectingFromDevice()
-                                    else ConnectedDevice()
-                                    DeviceLists()
+                                    if (viewModel.bluetoothClient.hasPermissions(android.Manifest.permission.BLUETOOTH_SCAN, android.Manifest.permission.BLUETOOTH_SCAN)) { // Permissions granted
+                                        if (viewModel.bluetoothClient.isConnecting) ConnectingToDevice()
+                                        else if (viewModel.bluetoothClient.isDisconnecting) DisconnectingFromDevice()
+                                        else ConnectedDevice()
+                                        DeviceLists()
+                                    }
+                                    else { // Permissions not granted
+                                        Box(
+                                            contentAlignment = Alignment.Center,
+                                            modifier = Modifier.fillMaxSize()
+                                        ) {
+                                            Column(
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                                verticalArrangement = Arrangement.spacedBy(20.dp)
+                                            ) {
+                                                Text(text = "Bluetooth permissions not granted")
+                                                Button(onClick = { viewModel.bluetoothClient.requestPermissions() }) {
+                                                    Text(text = "Grant")
+                                                }
+                                                Button(onClick = { repeat(2) {viewModel.menuVisible = !viewModel.menuVisible} }) {
+                                                    Text(text = "Refresh")
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 else { // Bluetooth disabled
                                     Box(
@@ -108,7 +123,6 @@ class BluetoothDevicesView(
                                             }
                                         }
                                     }
-                                    
                                 }
                             }
                             else { // Bluetooth not supported

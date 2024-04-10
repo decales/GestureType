@@ -1,4 +1,4 @@
-package com.example.project.model
+package com.example.project.model.processing
 
 import android.os.Build
 import android.view.KeyEvent
@@ -9,18 +9,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.text.isDigitsOnly
 
-enum class StateMachineMode {
-    COMMAND, INSERT
-}
-
-enum class StateMachineAction {
-    DEFAULT, SELECT
-}
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class StateMachine(
     private val transmissionClient: TransmissionClient
 ) {
+    enum class StateMachineMode { COMMAND, INSERT }
+    enum class StateMachineAction { DEFAULT, SELECT }
+
     var mode: StateMachineMode by mutableStateOf(StateMachineMode.INSERT)
     private var action: StateMachineAction by mutableStateOf(StateMachineAction.DEFAULT)
     private var modifier: Int by mutableIntStateOf(1);

@@ -1,6 +1,8 @@
 package com.example.project.model.bluetooth
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothHidDevice
@@ -12,16 +14,15 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.project.model.old.BluetoothDeviceReceiver
+import androidx.core.app.ActivityCompat
 
 
-@RequiresApi(Build.VERSION_CODES.Q)
+@RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("MissingPermission")
 
 class BluetoothClient(
@@ -53,7 +54,7 @@ class BluetoothClient(
 
     init {
         requestBluetoothEnable()
-        //requestPermissions()
+        requestPermissions()
         initProxy()
     }
 
@@ -63,18 +64,13 @@ class BluetoothClient(
         return true
     }
 
-//    fun requestPermissions() {
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//            bluetoothPermissionsLauncher.launch(
-//                arrayOf(
-//                    android.Manifest.permission.BLUETOOTH_CONNECT,
-//                    android.Manifest.permission.BLUETOOTH_SCAN
-//                )
-//            )
-//        }
-//    }
-
+    fun requestPermissions() {
+        ActivityCompat.requestPermissions(
+            context as Activity, arrayOf(
+            Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_CONNECT
+        ), 999)
+    }
 
     fun requestBluetoothEnable() {
         if (adapter != null) {
@@ -85,13 +81,13 @@ class BluetoothClient(
     }
 
     fun initProxy() {
-        if (hasPermissions(android.Manifest.permission.BLUETOOTH_CONNECT)) {
+        if (hasPermissions(Manifest.permission.BLUETOOTH_CONNECT)) {
             adapter?.getProfileProxy(context, serviceListener, BluetoothProfile.HID_DEVICE)
         }
     }
 
     fun updatePairedDevices() {
-        if (hasPermissions(android.Manifest.permission.BLUETOOTH_CONNECT)) {
+        if (hasPermissions(Manifest.permission.BLUETOOTH_CONNECT)) {
             adapter?.bondedDevices?.forEach { device ->
                 pairedDevices.add(device)
             }
@@ -99,7 +95,7 @@ class BluetoothClient(
     }
 
     fun startDeviceDiscovery() {
-        if (hasPermissions(android.Manifest.permission.BLUETOOTH_SCAN)) {
+        if (hasPermissions(Manifest.permission.BLUETOOTH_SCAN)) {
             context.registerReceiver(deviceReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
             updatePairedDevices()
             adapter?.startDiscovery()
@@ -107,20 +103,20 @@ class BluetoothClient(
     }
 
     fun connectToDevice(device: BluetoothDevice) {
-        if (hasPermissions(android.Manifest.permission.BLUETOOTH_CONNECT)) {
+        if (hasPermissions(Manifest.permission.BLUETOOTH_CONNECT)) {
             hidDevice?.connect(device)
         }
     }
 
     fun disconnectFromDevice()  {
-        if (hasPermissions(android.Manifest.permission.BLUETOOTH_CONNECT)) {
+        if (hasPermissions(Manifest.permission.BLUETOOTH_CONNECT)) {
             hidDevice?.disconnect(hostDevice)
         }
     }
 
 
     fun stopDeviceDiscovery() {
-        if (hasPermissions(android.Manifest.permission.BLUETOOTH_SCAN)) {
+        if (hasPermissions(Manifest.permission.BLUETOOTH_SCAN)) {
             adapter?.cancelDiscovery()
         }
     }
@@ -137,14 +133,13 @@ class BluetoothClient(
                     BluetoothHidDevice.SUBCLASS1_KEYBOARD,
                     KeyboardDescriptors.standard
                 ),
-                null, null, {it.run()}, deviceCallback
+                null, null, { it.run() }, deviceCallback
             )
         }
 
         override fun onServiceDisconnected(profile: Int) {
             hidDevice = null
         }
-
     }
 
 
@@ -180,7 +175,6 @@ class BluetoothClient(
                 }
             }
         }
-
 
         override fun onAppStatusChanged(pluggedDevice: BluetoothDevice?, registered: Boolean) {
             super.onAppStatusChanged(pluggedDevice, registered)

@@ -5,10 +5,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.pointer.PointerId
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.lifecycle.ViewModel
-import com.example.project.model.StateMachine
+import com.example.project.model.processing.StateMachine
 
 class GestureVM(
     val stateMachine: StateMachine

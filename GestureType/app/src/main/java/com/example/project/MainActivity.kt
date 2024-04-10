@@ -1,14 +1,9 @@
 package com.example.project
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothManager
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.registerForActivityResult
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -27,10 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.project.model.bluetooth.BluetoothClient
-import com.example.project.model.OcrClient
-import com.example.project.model.StateMachine
-import com.example.project.model.StateMachineMode
-import com.example.project.model.TransmissionClient
+import com.example.project.model.processing.OcrClient
+import com.example.project.model.processing.StateMachine
+import com.example.project.model.processing.TransmissionClient
 import com.example.project.ui.theme.ProjectTheme
 import com.example.project.view.BluetoothDevicesView
 import com.example.project.view.DrawingView
@@ -39,7 +33,7 @@ import com.example.project.viewmodel.BluetoothDevicesVM
 import com.example.project.viewmodel.DrawingVM
 import com.example.project.viewmodel.GestureVM
 
-@RequiresApi(Build.VERSION_CODES.Q)
+@RequiresApi(Build.VERSION_CODES.S)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -50,20 +44,20 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 
                     // Model setup
-                    val ocrClient: OcrClient = OcrClient()
-                    val bluetoothClient: BluetoothClient = BluetoothClient(this)
-                    val transmissionClient: TransmissionClient = TransmissionClient(bluetoothClient)
-                    val stateMachine: StateMachine = StateMachine(transmissionClient)
+                    val ocrClient = OcrClient()
+                    val bluetoothClient = BluetoothClient(this)
+                    val transmissionClient = TransmissionClient(bluetoothClient)
+                    val stateMachine = StateMachine(transmissionClient)
 
                     // View and VM setup
-                    val drawingVM: DrawingVM = DrawingVM(ocrClient, stateMachine)
-                    val drawingView: DrawingView = DrawingView(drawingVM)
+                    val drawingVM = DrawingVM(ocrClient, stateMachine)
+                    val drawingView = DrawingView(drawingVM)
 
-                    val bluetoothDevicesVM: BluetoothDevicesVM = BluetoothDevicesVM(bluetoothClient)
-                    val bluetoothDevicesView: BluetoothDevicesView = BluetoothDevicesView(bluetoothDevicesVM)
+                    val bluetoothDevicesVM = BluetoothDevicesVM(bluetoothClient)
+                    val bluetoothDevicesView = BluetoothDevicesView(bluetoothDevicesVM)
 
-                    val gestureVM: GestureVM =  GestureVM(stateMachine)
-                    val gestureView: GestureView = GestureView(gestureVM)
+                    val gestureVM = GestureVM(stateMachine)
+                    val gestureView = GestureView(gestureVM)
 
                     MainView(
                         drawingView = drawingView,
@@ -79,7 +73,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun MainView(drawingView: DrawingView, gestureView: GestureView, bluetoothDevicesView: BluetoothDevicesView, stateMachine: StateMachine) {
         val modeColor =
-            if (stateMachine.mode == StateMachineMode.INSERT) Color.Magenta else Color.Cyan
+            if (stateMachine.mode == StateMachine.StateMachineMode.INSERT) Color.Magenta else Color.Cyan
 
         Box(
             modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 5.dp, end = 5.dp)

@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.project.model.OcrClient
-import com.example.project.model.StateMachine
+import com.example.project.model.processing.OcrClient
+import com.example.project.model.processing.StateMachine
 import kotlinx.coroutines.launch
 
 class DrawingVM(

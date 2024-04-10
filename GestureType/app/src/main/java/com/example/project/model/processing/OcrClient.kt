@@ -1,4 +1,4 @@
-package com.example.project.model
+package com.example.project.model.processing
 
 import android.graphics.Bitmap
 import com.google.mlkit.vision.common.InputImage
@@ -12,7 +12,7 @@ class OcrClient(
 
     fun detectFromBitmap(bitmap: Bitmap): String {
         val task = ocr.process(InputImage.fromBitmap(bitmap, 0))
-        while (!task.isComplete) { /**/ }
+        while (!task.isComplete) { /* lol ik */ }
         return task.result.text
     }
 }

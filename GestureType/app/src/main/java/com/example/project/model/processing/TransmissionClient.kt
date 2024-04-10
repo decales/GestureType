@@ -1,4 +1,4 @@
-package com.example.project.model
+package com.example.project.model.processing
 
 import android.annotation.SuppressLint
 import android.os.Build
