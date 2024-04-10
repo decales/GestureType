@@ -13,20 +13,13 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.project.MainActivity
 import com.example.project.model.old.BluetoothDeviceReceiver
 
-
-data class BasicBluetoothDevice(
-    val name: String?,
-    val address: String
-)
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @SuppressLint("MissingPermission")
@@ -35,6 +28,7 @@ class BluetoothClient(
     private val context: Context,
 ) {
 
+    // Main bluetooth adapter
     val adapter: BluetoothAdapter? = context.getSystemService(BluetoothManager::class.java).adapter
 
     // Device variables
@@ -88,9 +82,6 @@ class BluetoothClient(
         }
         else Toast.makeText(context, "Bluetooth is not supported on this device", Toast.LENGTH_LONG).show()
     }
-
-
-
 
 
     fun initProxy() {
@@ -151,7 +142,7 @@ class BluetoothClient(
                     "Gesture-based input device application",
                     "CMPT 481",
                     BluetoothHidDevice.SUBCLASS1_KEYBOARD,
-                    KeyboardDescriptors.KEYBOARD
+                    KeyboardDescriptors.KEYBOARD_MODIFIED
                 ),
                 null, null, {it.run()}, deviceCallback
             )

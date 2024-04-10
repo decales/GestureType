@@ -84,7 +84,7 @@ object KeyboardReport {
         set(value) { bytes[2] = value }
 
 
-    val KeyEventMap = mapOf<Int,Int>(
+    val keyReportMap = mapOf(
 
         KeyEvent.KEYCODE_A to 4,
         KeyEvent.KEYCODE_B to 5,
