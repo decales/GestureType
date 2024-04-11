@@ -45,7 +45,10 @@ class StateMachine(
                 }
             }
             StateMachineMode.COMMAND -> {
-                if ((input.isDigitsOnly())) modifier = input.toInt()
+                if ((input.isDigitsOnly())) {
+                    modifier = input.toInt()
+                    command = "Modifier set to $input"
+                }
                 else {
                     if (action == StateMachineAction.SELECT) {
                         when(input) {
@@ -60,7 +63,10 @@ class StateMachine(
                     else {
                         when(input) {
                             "DoubleTap" -> mode = StateMachineMode.INSERT
-                            "S" -> action = StateMachineAction.SELECT
+                            "S" -> {
+                                action = StateMachineAction.SELECT
+                                command = "Prepare select"
+                            }
                             "C" -> exec(KeyEvent.KEYCODE_C, true, false, 1, "Copy selection")
                             "X" -> exec(KeyEvent.KEYCODE_X, true, false, 1, "Cut/delete selection")
                             "V" -> exec(KeyEvent.KEYCODE_V, true, false, 1, "Paste selection")

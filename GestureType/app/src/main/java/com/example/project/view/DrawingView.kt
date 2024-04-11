@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,7 +63,7 @@ class DrawingView (
                 ) {
                     viewModel.prepareCanvas(size)
                     viewModel.drawStrokes()
-                    drawImage(viewModel.canvasBitmap)
+                    drawImage(viewModel.bitmap)
                 }
             }
         }

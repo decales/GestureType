@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import com.example.project.model.bluetooth.BluetoothClient
 import com.example.project.model.processing.OcrClient
@@ -45,7 +47,7 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 
                     // Model setup
-                    val ocrClient = OcrClient()
+                    val ocrClient = OcrClient(this)
                     val bluetoothClient = BluetoothClient(this)
                     val transmissionClient = TransmissionClient(bluetoothClient)
                     val stateMachine = StateMachine(transmissionClient)
@@ -64,7 +66,8 @@ class MainActivity : ComponentActivity() {
                         drawingView = drawingView,
                         gestureView = gestureView,
                         bluetoothDevicesView = bluetoothDevicesView,
-                        stateMachine = stateMachine
+                        stateMachine = stateMachine,
+                        ocr = ocrClient
                     )
                 }
             }
@@ -72,7 +75,13 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun MainView(drawingView: DrawingView, gestureView: GestureView, bluetoothDevicesView: BluetoothDevicesView, stateMachine: StateMachine) {
+    fun MainView(
+        drawingView: DrawingView,
+        gestureView: GestureView,
+        bluetoothDevicesView: BluetoothDevicesView,
+        stateMachine: StateMachine,
+        ocr: OcrClient
+    ) {
         val modeColor =
             if (stateMachine.mode == StateMachine.StateMachineMode.INSERT) Color.Magenta else Color.Cyan
 
