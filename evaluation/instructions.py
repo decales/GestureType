@@ -1,0 +1,23 @@
+ins1 = "Insert 'APPLE' after 'eight'"
+ins2 = "Delete 'i' from 'nineteen'"
+ins3 = "Insert 'BANANA' after 'fifteen'"
+ins4 = "Prepend 'D' to 'fourteen'"
+ins5 = "Select and cut 'APPLE'"
+ins6 = "Paste the buffer after 'BANANA'"
+ins7 = "Append 'X' to 'thirteen'"
+ins8 = "Select and cut 'thirteenX Dfourteen'"
+ins9 = "Paste the buffer before 'one'"
+ins10 = "Prepend 'A' to 'twenty'"
+ins11 = "Append '.' to 'ten'"
+ins12 = "Delete 'x' from 'sixteen'"
+ins13 = "Append ',' to 'thirteenX'"
+ins14 = "Select and cut 'one two three'"
+ins15 = "Paste the buffer after 'Atwenty'"
+ins16 = "Select and cut 'four five six seven eight'"
+ins17 = "Paste the buffer after 'three'"
+ins18 = "Delete 'o' from 'one'"
+ins19 = "Select and cut 'A' from 'APPLE'"
+ins20 = "Prepend the buffer to 'nneteen'"
+
+instructions = [ins1, ins2, ins3, ins4, ins5, ins6, ins7, ins8, ins9, ins10,
+                ins11, ins12, ins13, ins14, ins15, ins16, ins17, ins18, ins19, ins20, "Done"]
