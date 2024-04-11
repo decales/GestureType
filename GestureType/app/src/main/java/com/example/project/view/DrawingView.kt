@@ -1,5 +1,7 @@
 package com.example.project.view
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.project.viewmodel.DrawingVM
 
+@RequiresApi(Build.VERSION_CODES.S)
 class DrawingView (
     private val viewModel: DrawingVM,
 ) {
@@ -29,9 +32,6 @@ class DrawingView (
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(onClick = { viewModel.detectCharacter() }) {
-                    Text(text = "Get character")
-                }
                 DrawingSurface()
             }
         }
@@ -41,7 +41,7 @@ class DrawingView (
     fun DrawingSurface() {
         Card (
             modifier = Modifier
-                .padding(top = 10.dp, bottom = 10.dp)
+                .padding(20.dp)
                 .pointerInput(key1 = 1) {
                     detectDragGestures { change, dragAmount ->
                         change.consume()
@@ -58,7 +58,7 @@ class DrawingView (
                         .pointerInput(key1 = true) {
                             detectDragGestures { change, dragAmount ->
                                 change.consume()
-                                viewModel.addStroke(change, dragAmount);
+                                viewModel.addStroke(change, dragAmount)
                             }
                         }
                 ) {
@@ -66,10 +66,7 @@ class DrawingView (
                     viewModel.drawStrokes()
                     drawImage(viewModel.canvasBitmap)
                 }
-
             }
-
-
         }
     }
 }

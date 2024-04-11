@@ -1,5 +1,7 @@
 package com.example.project.viewmodel
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +11,7 @@ import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.lifecycle.ViewModel
 import com.example.project.model.processing.StateMachine
 
+@RequiresApi(Build.VERSION_CODES.Q)
 class GestureVM(
     val stateMachine: StateMachine
 ): ViewModel() {
@@ -35,5 +38,6 @@ class GestureVM(
             pointerCount = 1
         }
         stateMachine.input(detectedGesture)
+        detectedGesture = ""
     }
 }

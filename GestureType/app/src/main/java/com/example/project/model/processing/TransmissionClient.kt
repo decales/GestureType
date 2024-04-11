@@ -6,7 +6,7 @@ import androidx.annotation.RequiresApi
 import com.example.project.model.bluetooth.BluetoothClient
 import com.example.project.model.bluetooth.KeyboardReport
 
-@RequiresApi(Build.VERSION_CODES.Q)
+@RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("MissingPermission")
 class TransmissionClient(
     private val bluetoothClient: BluetoothClient

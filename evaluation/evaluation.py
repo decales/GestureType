@@ -4,7 +4,6 @@ import text
 import instructions
 
 index = 0
-currentInstruction = instructions.ins1
 startTime = None
 
 
@@ -35,7 +34,7 @@ textBox = tk.Text(root, height=4, width=50, wrap=tk.WORD)
 textBox.insert("1.0", text.base)
 textBox.bind("<KeyRelease>", onEdit)
 
-prompt = tk.Label(root, text=currentInstruction)
+prompt = tk.Label(root, text=instructions.ins1)
 
 startButton = tk.Button(root, text="Start", command=onStart)
 startButton.pack(pady=20)

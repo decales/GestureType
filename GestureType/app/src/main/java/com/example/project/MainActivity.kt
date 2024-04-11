@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -83,33 +84,29 @@ class MainActivity : ComponentActivity() {
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(10.dp)
                 ) {
-
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Box {
-                            Text(text = "${stateMachine.mode} MODE", color = modeColor,)
-                        }
+                        Text(text = "${stateMachine.mode} MODE", color = modeColor,)
                         Box(
                             contentAlignment = Alignment.CenterEnd,
                             modifier = Modifier.fillMaxWidth()
-                        ) {
-                            bluetoothDevicesView.View()
-                        }
+                        ) { bluetoothDevicesView.View() }
                     }
-                    Column(
-                        modifier = Modifier
-                            .padding(20.dp)
+                    drawingView.View()
+                    gestureView.View()
+                    Box(
+                        contentAlignment = Alignment.TopCenter,
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        drawingView.View()
-                        gestureView.View()
+                        Text(text = stateMachine.command)
                     }
-                    Text(text = stateMachine.command)
                 }
             }
         }

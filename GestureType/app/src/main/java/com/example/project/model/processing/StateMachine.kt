@@ -10,7 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.core.text.isDigitsOnly
 
 
-@RequiresApi(Build.VERSION_CODES.Q)
+@RequiresApi(Build.VERSION_CODES.S)
 class StateMachine(
     private val transmissionClient: TransmissionClient
 ) {
