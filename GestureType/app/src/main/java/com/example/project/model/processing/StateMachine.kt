@@ -25,6 +25,7 @@ class StateMachine(
     fun exec(key: Int, controlDown: Boolean, shiftDown: Boolean, modifier: Int, description: String) {
         transmissionClient.sendKeys(key, controlDown, shiftDown, modifier)
         command = description
+        "a".toInt()
     }
 
     fun input(input: String) {
