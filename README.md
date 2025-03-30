@@ -1,5 +1,14 @@
 ## GestureType – *A Gesture-based Input Device Application*
 
+### Contents
+
+1. [Interaction Problem](#i-interaction-problem)
+2. [Interaction Technique](#ii-interaction-technique)
+3. [Technical Overview](#iii-technical-overview)
+4. [Evaluation](#iv-evaluation)
+5. [Conclusion](#v-conclusion)
+6. [References and Documentation](#vi-references-and-documentation)
+
 ### I. Interaction Problem
 
 This project addresses the challenge of optimizing text input and command execution, particularly for
@@ -11,7 +20,7 @@ and text-related functionality that accommodates a diverse range of users.
 ### II. Interaction Technique
 
 The interaction technique explored in this project entails using an external touchscreen device as an
-alternative input method for devices that support the HID keyboard protocol (*section VI.1*). Rather than
+alternative input method for devices that support the HID keyboard protocol (*section [VI.1](#vi-references-and-documentation)*). Rather than
 typing on a physical keyboard to provide input to one of these devices, users can draw the equivalent
 letters, numbers, and symbols directly on the screen of the touch enabled device.
 
@@ -23,28 +32,30 @@ commands such as selecting, copying, cutting, and pasting text. This approach pr
 user-friendly way to interact with devices that require keyboard input, catering to diverse user needs and
 preferences.
 
-*Figure A. Table of the full functionality supported by the interaction technique*
+*Figure A. Table of the full functionality supported by the interaction technique*<br>
 
 | Touch input | Function |
 |----------|----------|
 | Double tap | Toggle between insert and command mode |
-| Insert mode |
+| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ *Insert mode* ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ | ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ *Insert mode* ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ |
 | Draw alphanumeric character or symbol| Insert equivalent ASCII character/symbol at cursor |
 | One finger swipe left | Delete character/symbol at cursor |
 | One finger swipe right | Insert space at cursor |
 | Two finger swipe left | Insert comma at cursor |
 | Two finger swipe right | Insert period at cursor |
-| Command mode |
+| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ *Command mode* ~ ~ ~ ~ ~ ~ ~ ~ ~ | ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ *Command mode* ~ ~ ~ ~ ~ ~ ~ ~ ~ |
 | Modifier* + one finger swipe left/right | Move cursor one character left/right |
 | Modifier* + two finger swipe left/right | Move cursor one word left/right |
-| Modifier* + draw ‘S’ + one finger swipe left/right | Select character to left/right at cursor |
-| Modifier* + draw ‘S’ + two finger swipe left/right | Select word to left/right at cursor |
-| Draw ‘C’ | Copy selection |
-| Draw ‘X’ | Cut/delete selection |
-| Modifier* + Draw ‘V’ | Paste selection at cursor |
+| Modifier* + draw *S* + one finger swipe left/right | Select character to left/right at cursor |
+| Modifier* + draw *S* + two finger swipe left/right | Select word to left/right at cursor |
+| Draw *C* | Copy selection |
+| Draw *X* | Cut/delete selection |
+| Modifier* + Draw *V* | Paste selection at cursor |
 
 \**Repetition modifier: Optionally draw a number 1 – 9 and execute the command this many times. If the repetition
 modifier is not specified, the command will execute once.*
+
+<br>
 
 ### III. Technical Overview
 
@@ -54,7 +65,7 @@ As the project’s interaction technique requires a touch based interface to fun
 form of an Android application for mobile devices. This choice of platforms supports a wide range of
 devices, increasing the accessibility of the application and its interaction technique. The application itself
 is implemented in Kotlin, a high-level Java-like programming language considered to be the modern
-standard for native Android development (*section VI.2*).
+standard for native Android development (*section [VI.2](#vi-references-and-documentation)*).
 
 The GestureType application uses the model-view-view-model (MVVM) design pattern (*figure B*). As
 seen in the model-view-controller pattern (MVC), MVVM shares two of its core components, the model
@@ -63,24 +74,24 @@ the case of the project application, the model is comprised of the optical chara
 client, the input processing layer, and the Bluetooth client. The view represents the user interface or any
 visual user-facing elements, and reflects the current state of the model and view-model. The application’s
 user interface is built using Android’s Jetpack Compose toolkit, which provides a flexible and intuitive
-way to build modern mobile interfaces (*section VI.3*) Unlike MVC, the MVVM design pattern features a
+way to build modern mobile interfaces (*section [VI.3](#vi-references-and-documentation)*) Unlike MVC, the MVVM design pattern features a
 view-model, which as its name suggests, serves as bridge between the view and model. This component is
 primarily responsible for data binding and view state management, and can be closely compared to the
 concept of an interaction-model or *i-model* that is present in many MVC-derived design patterns.
 
-*Figure B. Visual representation of the MVVM design pattern*
+*Figure B. Visual representation of the MVVM design pattern*<br>
 ![Figure B](doc/assets/b.png)
 
 #### OCR and pre-processing
 
 The primary function of the GestureType application lies in its ability to recognize handwritten
 characters, numbers, and symbols. To enable this functionality, the application leverages Google’s ML Kit
-text recognition v2 API (*section VI.4*), providing a convenient implementation of basic OCR capabilities.
+text recognition v2 API (*section [VI.4](vi-references-and-documentation)*), providing a convenient implementation of basic OCR capabilities.
 Despite this convenience, issues arose in early production regarding the accuracy and consistency of
 character recognition. The text recognition v2 API is primarily used to detect text in real-world images where 
 there are many non-text elements in the environment. It excels in particular at detecting sequences
-of characters, such as words and sentences. For this reason, ambiguously shaped characters such as ‘I’,
-‘O’, and many others may be difficult to detect when they are not part of a sequence, as they could be
+of characters, such as words and sentences. For this reason, ambiguously shaped characters such as *I*,
+*O*, and many others may be difficult to detect when they are not part of a sequence, as they could be
 mistaken for a non-text element in the environment.
 
 When a user draws a character in the GestureType application, the pixels of the drawn strokes are saved
@@ -92,9 +103,6 @@ creation of a bitmap containing a sequence of characters. Since its implementati
 accuracy and reliability of interpreted characters has dramatically improved, though there are still issues with
 reliably interpreting lower case letters and symbols.
 
-*Figure C. Visual example of a combined bitmap provided the drawn input 'Q'*
-![Figure C](doc/assets/c.png)
-
 #### State machine
 
 Once drawn input is processed by the OCR client or a user performs a gesture, the output of these actions
@@ -102,7 +110,7 @@ is provided to the state machine for interpretation. As mentioned earlier, the i
 based, operating in either insert mode or command mode. The state machine contains the logic that
 determines the functional flow of the application given an input and the current mode, and prepares the
 input to be translated into meaningful data that will eventually be interpreted by the HID keyboard
-protocol  (*section VI.1* ).
+protocol (*section [VI.1](#vi-references-and-documentation)*).
 
 In insert mode, the state machine processes basic text inputs such as adding and deleting characters or
 inserting punctuation based on gestures. Command mode allows for more complex operations such as text
@@ -121,7 +129,7 @@ in combination, extend the functionality of an Android device to act as a human 
 The Bluetooth client establishes and manages Bluetooth connectivity, allowing the Android device to scan
 for and connect to available devices. It is also responsible for initializing the HID device profile. This is
 accomplished using the Android BluetoothHidDevice API with the keyboard HID descriptor (*section
-VI.6*), which defines an input device’s capabilities to the host and is essential for the device to be
+[VI.6](#vi-references-and-documentation)*), which defines an input device’s capabilities to the host and is essential for the device to be
 recognized and function as a Bluetooth keyboard.
 
 The keyboard report object consists of a byte array that represents the current state of the ‘keyboard’,
@@ -132,6 +140,11 @@ codes that can be interpreted by the host device.
 Lastly, the transmission client functions an intermediary that communicates directly with the Bluetooth
 client to send the prepared key reports. It receives input from the state machine, and ensures the input is
 processed and transmitted correctly.
+
+*Figure C. Visual example of a combined bitmap provided the drawn input 'Q'*
+![Figure C](doc/assets/c.png)
+
+<br>
 
 ### IV. Evaluation
 
@@ -145,7 +158,7 @@ arrow key modified by the control key in expert usage (*figure D*). The second v
 keyboard usage. Using the previous example, the equivalent function for this method is using the mouse
 to reposition the cursor to the next word.
 
-*Figure D. Supported GestureType cursor commands and their equivalent keyboard methods*
+*Figure D. Supported GestureType cursor commands and their equivalent keyboard methods*<br>
 
 | Command | Expert method | Novice method |
 | ----- | ----- | ----- |
@@ -195,12 +208,12 @@ approximately four times that of the keyboard methods. Select and cut instructio
 times the completion time. This can be attributed to the overhead required to execute these commands.
 Consider the case of cutting five words using the interaction technique. First and foremost, this requires
 the user to count the number of words in the string they want to cut, assuming this is not obvious at a
-glance. After drawing the number to register the modifier, they must draw an ‘S’, then two finger swipe to
+glance. After drawing the number to register the modifier, they must draw an *S*, then two finger swipe to
 select the words. The keyboard methods require fewer, or less complex steps to accomplish the same
 action. As for the remaining instruction types, all of those using the interaction technique take the
 approximately twice the time to complete as the keyboard methods.
 
-*Figure E. Line chart of the instruction completion times*
+*Figure E. Line chart of the instruction completion times*<br>
 ![Figure E](doc/assets/e.png)
 
 The interaction technique’s relatively poor performance in instruction completion time can be attributed
@@ -220,7 +233,7 @@ it is still possible for the OCR client to misinterpret the character drawn by u
 abated by minding one’s input to ensure it is drawn clearly, though this in itself can slow down input time
 due to the extra drawing precision required.
 
-*Figure F. Line chart of the average instruction completion times by instruction type*
+*Figure F. Line chart of the average instruction completion times by instruction type*<br>
 ![Figure F](doc/assets/f.png)
 
 Due to the limited functionality of the evaluation program, the cursor manipulation commands of all three
@@ -243,16 +256,16 @@ The results of the interaction are notably more variable compared to the keyboar
 clear upward trend line in *figure G* , the relationship between the instruction completion time and cursor
 distance is likely as not as strong as it appears due to the outlier data points in the sample. Despite this, it
 still appears as if there is an upward trend in the scatter plot. This aligns with the subjective experience of
-
-
 using the cursor manipulation commands in the evaluation. Due the input delay present in the application,
 it is common to misplace the cursor from the intended target using quick repeated swipes, especially
 when travelling longer distances. The alternative approach to moving the cursor quickly is with the
 addition of a modifier. However, as previously mentioned, this requires counting the number of words to
 move the cursor, or at the very least, requires the extra input to set the modifier.
 
-*Figure G. Scatter plot of the relationship between the cursor distance and instruction completion time*
+*Figure G. Scatter plot of the relationship between the cursor distance and instruction completion time*<br>
 ![Figure G](doc/assets/g.png)
+
+<br>
 
 ### V. Conclusion
 
@@ -270,6 +283,7 @@ impulses, system designers and researchers should consider the data gathered in 
 irrefutable testament to the fact that the keyboard will not replaced any time soon, and they should abandon their
 future aspirations to design a system similar to GestureType.
 
+<br>
 
 ### VI. References and Documentation
 
